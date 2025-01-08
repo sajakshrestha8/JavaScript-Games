@@ -24,12 +24,21 @@ let spiderHouse = Array.from(
     )
 );
 
+let followMouse = {
+  x: 0,
+  y: 0,
+  w: 0,
+  h: 0,
+};
+
+console.log(spider);
+
 const backGroundImage = new Image();
 backGroundImage.src =
   "https://images.pexels.com/photos/129733/pexels-photo-129733.jpeg?cs=srgb&dl=pexels-fwstudio-33348-129733.jpg&fm=jpg";
 
 function gameLoop() {
-  let followMouse = {
+  followMouse = {
     x: mouseDirection.x,
     y: mouseDirection.y,
     w: 10,
@@ -41,10 +50,8 @@ function gameLoop() {
   ctx.drawImage(backGroundImage, 0, 0, canvas.width, canvas.height);
 
   spiderHouse.forEach((spider) => {
-    if (isCollision(spider, followMouse)) {
-      console.log("collision");
-    }
     spider.update(ctx);
+    // console.log(followMouse);
   });
 
   ctx.beginPath();
@@ -54,12 +61,12 @@ function gameLoop() {
   requestAnimationFrame(gameLoop);
 }
 
-function isCollision(box1, box2) {
+function isCollision(spider, box2) {
   return (
-    box1.x < box2.x + box2.w &&
-    box1.x + box1.w > box2.x &&
-    box1.y < box2.y + box2.h &&
-    box1.y + box1.h > box2.y
+    spider.position.x < box2.x + box2.w &&
+    spider.position.x + spider.size.width > box2.x &&
+    spider.position.y < box2.y + box2.h &&
+    spider.position.y + spider.size.height > box2.y
   );
 }
 
@@ -72,4 +79,15 @@ canvas.addEventListener("mousemove", (e) => {
     x: e.x - boundedArea.left,
     y: e.y - boundedArea.top,
   };
+});
+
+console.log(spider);
+
+canvas.addEventListener("click", () => {
+  spiderHouse.forEach((spider) => {
+    if (isCollision(spider, followMouse)) {
+      console.log("collision vayo dai ko");
+      (spider.direction.x = 0), (spider.direction.y = 0);
+    }
+  });
 });
